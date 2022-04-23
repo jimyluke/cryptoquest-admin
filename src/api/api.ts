@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const JWTToken = localStorage.getItem('token');
+const JWTToken = JSON.parse(localStorage.getItem('token')!);
 
 export const cryptoQuestApi = axios.create({
   baseURL:
