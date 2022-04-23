@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import Container from '@mui/material/Container';
 
-function App() {
+import 'react-toastify/dist/ReactToastify.css';
+import Router from './routes/Router';
+import { useAppDispatch } from './store/store';
+import { loginUserByToken } from './store/authSlice';
+
+const App = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) dispatch(loginUserByToken(null));
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+      <Router />
+    </Container>
   );
-}
+};
 
 export default App;

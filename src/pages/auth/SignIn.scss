@@ -1,0 +1,36 @@
+.auth__container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth__heading {
+  font-size: 3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 20rem;
+}
+
+.auth__error {
+  text-align: center;
+  padding: 1rem;
+  background-color: white;
+  color: #ff8499;
+  font-size: 1.5rem;
+  border-radius: 1.6rem;
+  margin-bottom: 2rem;
+  border: 1px solid #ff8499;
+  overflow: hidden;
+}
