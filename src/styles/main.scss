@@ -1,4 +1,12 @@
 @import './base/global.scss';
 
+// PAGES
 @import '../pages/auth/SignIn.scss';
+@import '../pages/token-name/TokenName.scss';
+
+// COMPONENTS
 @import '../components/header/Header.scss';
+@import '../components/spinner/Spinner.scss';
+@import '../components/error/Error.scss';
+@import '../components/modal/Modal.scss';
+@import '../components/token-names/TokenNames.scss';

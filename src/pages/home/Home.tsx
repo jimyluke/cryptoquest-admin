@@ -1,11 +1,9 @@
-import TokenNamesList from '../../components/token-names-list/TokenNamesList';
+import { Navigate } from 'react-router-dom';
+
+import ROUTES from '../../routes/routes';
 
 const Home = () => {
-  return (
-    <div>
-      <TokenNamesList />
-    </div>
-  );
+  return <Navigate to={ROUTES.TOKEN_NAMES_PAGE} />;
 };
 
 export default Home;

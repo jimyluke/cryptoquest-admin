@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const JWTToken = JSON.parse(localStorage.getItem('token')!);
-
 export const cryptoQuestApi = axios.create({
   baseURL:
     process.env.NODE_ENV === 'production'
@@ -10,6 +8,5 @@ export const cryptoQuestApi = axios.create({
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    ...(JWTToken && { 'x-access-token': JWTToken }),
   },
 });

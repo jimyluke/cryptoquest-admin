@@ -1,5 +1,6 @@
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { IconButton } from '@mui/material';
+
 import { logoutCurrentUser } from '../../store/authSlice';
 import { useAppDispatch } from '../../store/store';
 
@@ -14,7 +15,7 @@ const Header = () => {
   return (
     <div className="header">
       <IconButton onClick={handleLogout}>
-        <ExitToAppIcon fontSize="large" />
+        <ExitToAppIcon color="error" fontSize="large" />
       </IconButton>
     </div>
   );

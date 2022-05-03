@@ -14,8 +14,8 @@ const SignIn = () => {
   const signInError = useAppSelector(selectSignInError);
 
   useEffect(() => {
-    if (signInError) {
-      notify('error', signInError);
+    if (signInError && signInError.message) {
+      notify('error', signInError.message);
     }
   }, [signInError]);
 
