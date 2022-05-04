@@ -1,15 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, CircularProgress, TextField } from '@mui/material';
 import { Navigate, useParams } from 'react-router-dom';
+import { Alert, Button, CircularProgress, TextField } from '@mui/material';
+import { debounce } from 'lodash';
+
+import ModalComponent from '../../components/modal/Modal';
+
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { editTokenName, selectTokenName } from '../../store/tokenNamesSlice';
+import {
+  editTokenName,
+  selectTokenName,
+  selectTokenNames,
+} from '../../store/tokenNamesSlice';
+
 import ROUTES from '../../routes/routes';
 import { notify } from '../../utils/notify';
-import { debounce } from 'lodash';
 import { cryptoQuestApi } from '../../api/api';
 
 const TokenName = () => {
   const { tokenNameId } = useParams();
+  const dispatch = useAppDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!tokenNameId) {
     return null;
@@ -18,6 +29,7 @@ const TokenName = () => {
   const tokenNameData = useAppSelector((state) =>
     selectTokenName(state, +tokenNameId)
   );
+  const { isEditing } = useAppSelector(selectTokenNames);
 
   if (!tokenNameData) {
     return <Navigate to={ROUTES.TOKEN_NAMES_PAGE} />;
@@ -29,8 +41,6 @@ const TokenName = () => {
     isLoading: false,
     error: null,
   });
-
-  const dispatch = useAppDispatch();
 
   const handleDebounceChangeTokenName = async (value: string) => {
     try {
@@ -78,13 +88,20 @@ const TokenName = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     try {
-      setCheckTokenName({
-        isLoading: true,
-        tokenNameExist: false,
-        error: null,
-      });
-      setTokenName(e.target.value);
-      debouncedChangeHandler(e.target.value);
+      const regex = /^[A-Za-z]+( [A-Za-z0-9]?)?[A-Za-z0-9]*$/;
+
+      if (
+        regex.test(e.currentTarget.value) ||
+        e.currentTarget.value.length === 0
+      ) {
+        setCheckTokenName({
+          isLoading: true,
+          tokenNameExist: false,
+          error: null,
+        });
+        setTokenName(e.target.value);
+        debouncedChangeHandler(e.target.value);
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -98,12 +115,15 @@ const TokenName = () => {
     }
   };
 
-  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onConfirmHandler = async () => {
     if (tokenName) {
-      dispatch(editTokenName({ tokenName, tokenNameId: +tokenNameId }));
+      await dispatch(editTokenName({ tokenName, tokenNameId: +tokenNameId }));
+      setIsModalOpen(false);
     }
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -114,7 +134,7 @@ const TokenName = () => {
 
   return (
     <div className="token-name">
-      <form className="token-name__form" onSubmit={onSubmitHandler}>
+      <div className="token-name__content">
         <TextField
           style={{ backgroundColor: 'white' }}
           value={tokenNameData?.id}
@@ -145,6 +165,7 @@ const TokenName = () => {
           required
           label="Token Name"
           variant="outlined"
+          inputProps={{ maxLength: 32 }}
         />
         {checkTokenName.tokenNameExist &&
           !(tokenNameData?.token_name === tokenName) && (
@@ -156,19 +177,37 @@ const TokenName = () => {
             tokenNameData?.token_name === tokenName ||
             checkTokenName.tokenNameExist ||
             checkTokenName.isLoading ||
+            isEditing ||
             !!checkTokenName.error
           }
-          type="submit"
+          onClick={toggleModal}
           variant="contained"
           color="success"
         >
-          {checkTokenName.isLoading ? (
+          {checkTokenName.isLoading || isEditing ? (
             <CircularProgress size={30} />
           ) : (
             'Save changes'
           )}
         </Button>
-      </form>
+        <ModalComponent
+          isClosable={!isEditing}
+          onClose={toggleModal}
+          isOpen={isModalOpen}
+        >
+          <div className="token-names__modal-content">
+            <div>{`Are you sure you want to change token name from "${tokenNameData?.token_name}" to "${tokenName}"?`}</div>
+            <Button
+              onClick={onConfirmHandler}
+              variant="contained"
+              color="success"
+              disabled={isEditing}
+            >
+              {isEditing ? <CircularProgress size={30} /> : 'Confirm'}
+            </Button>
+          </div>
+        </ModalComponent>
+      </div>
     </div>
   );
 };

@@ -57,23 +57,6 @@ const TokenNamesItem = ({ tokenName }: ITokenNamesItemProps) => {
       <StyledTableCell style={{ fontWeight: 'bold', width: '300px' }}>
         {tokenName.token_name}
       </StyledTableCell>
-      <ModalComponent
-        isClosable={!isApproving}
-        onClose={toggleApproveModal}
-        isOpen={isApproveModalOpen}
-      >
-        <div className="token-names__modal-content">
-          <div>{`Are you sure you want to approve token name "${tokenName.token_name}"?`}</div>
-          <Button
-            onClick={() => onHandleApprove(tokenName.id)}
-            variant="contained"
-            color="success"
-            disabled={isApproving}
-          >
-            {isApproving ? <CircularProgress size={30} /> : 'Confirm'}
-          </Button>
-        </div>
-      </ModalComponent>
       <StyledTableCell align="center">
         <Link
           className="token-names__link"
@@ -91,6 +74,23 @@ const TokenNamesItem = ({ tokenName }: ITokenNamesItemProps) => {
           Approve
         </Button>
       </StyledTableCell>
+      <ModalComponent
+        isClosable={!isApproving}
+        onClose={toggleApproveModal}
+        isOpen={isApproveModalOpen}
+      >
+        <div className="token-names__modal-content">
+          <div>{`Are you sure you want to approve token name "${tokenName.token_name}"?`}</div>
+          <Button
+            onClick={() => onHandleApprove(tokenName.id)}
+            variant="contained"
+            color="success"
+            disabled={isApproving}
+          >
+            {isApproving ? <CircularProgress size={30} /> : 'Confirm'}
+          </Button>
+        </div>
+      </ModalComponent>
       <StyledTableCell align="center">
         <Button onClick={toggleRejectModal} variant="contained" color="error">
           Reject

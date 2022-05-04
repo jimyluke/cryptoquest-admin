@@ -12,7 +12,7 @@ const EntireApp = () => {
   return (
     <>
       {user && <Header />}
-      <Container className="app__container">
+      <Container>
         <main className="main">
           <Outlet />
         </main>

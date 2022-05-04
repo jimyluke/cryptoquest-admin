@@ -1,8 +1,33 @@
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  height: 60px;
-  padding: 0.5rem;
   background-color: black;
+  color: white;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.header-nav {
+  text-transform: uppercase;
+
+  &__list {
+    display: flex;
+    align-items: center;
+  }
+
+  &__item {
+    list-style: none;
+  }
+
+  &__link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      color: #eee;
+    }
+  }
 }
