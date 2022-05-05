@@ -36,8 +36,9 @@ const TokenName = () => {
   }
 
   const [tokenName, setTokenName] = useState(tokenNameData?.token_name);
-  const [checkTokenName, setCheckTokenName] = useState({
+  const [values, setValues] = useState({
     tokenNameExist: false,
+    tokenNameRejected: false,
     isLoading: false,
     error: null,
   });
@@ -50,30 +51,47 @@ const TokenName = () => {
         tokenName: value,
       });
 
-      console.log(response);
-
-      const { isTokenNameExist } = response.data;
-      if (isTokenNameExist) {
-        setCheckTokenName({
+      const { isTokenNameExist, isTokenNameRejected } = response.data;
+      if (isTokenNameExist && isTokenNameRejected) {
+        setValues((prev) => ({
+          ...prev,
           isLoading: false,
           tokenNameExist: true,
-          error: null,
-        });
-      } else {
-        setCheckTokenName({
+          tokenNameRejected: true,
+        }));
+      } else if (isTokenNameExist && !isTokenNameRejected) {
+        setValues((prev) => ({
+          ...prev,
+          isLoading: false,
+          tokenNameExist: true,
+          tokenNameRejected: false,
+        }));
+      } else if (
+        (!isTokenNameExist && isTokenNameRejected) ||
+        value.trim().toLowerCase() === 'name pending'
+      ) {
+        setValues((prev) => ({
+          ...prev,
           isLoading: false,
           tokenNameExist: false,
-          error: null,
-        });
+          tokenNameRejected: true,
+        }));
+      } else {
+        setValues((prev) => ({
+          ...prev,
+          isLoading: false,
+          tokenNameExist: false,
+          tokenNameRejected: false,
+        }));
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setCheckTokenName({
+      setValues((prev) => ({
+        ...prev,
         isLoading: false,
-        tokenNameExist: false,
         error: error.message,
-      });
+      }));
       console.error(error.message);
       notify('error', error.message);
     }
@@ -88,28 +106,28 @@ const TokenName = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     try {
-      const regex = /^[A-Za-z]+( [A-Za-z0-9]?)?[A-Za-z0-9]*$/;
+      const regex = /^[A-Za-z]+( [A-Za-z]?)?[A-Za-z]*$/;
 
       if (
         regex.test(e.currentTarget.value) ||
         e.currentTarget.value.length === 0
       ) {
-        setCheckTokenName({
-          isLoading: true,
-          tokenNameExist: false,
+        setValues((prev) => ({
+          ...prev,
           error: null,
-        });
+          isLoading: true,
+        }));
         setTokenName(e.target.value);
         debouncedChangeHandler(e.target.value);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setCheckTokenName({
-        isLoading: false,
-        tokenNameExist: false,
+      setValues((prev) => ({
+        ...prev,
         error: error.message,
-      });
+        isLoading: false,
+      }));
       console.error(error.message);
       notify('error', error.message);
     }
@@ -167,24 +185,30 @@ const TokenName = () => {
           variant="outlined"
           inputProps={{ maxLength: 32 }}
         />
-        {checkTokenName.tokenNameExist &&
+        {values.tokenNameExist &&
+          !values.tokenNameRejected &&
+          !values.isLoading &&
+          !isEditing &&
           !(tokenNameData?.token_name === tokenName) && (
             <Alert severity="error">{`Token name "${tokenName}" already exist`}</Alert>
           )}
+        {values.tokenNameRejected && !values.isLoading && !isEditing && (
+          <Alert severity="error">{`Token name "${tokenName}" is not possible to use`}</Alert>
+        )}
         <Button
           disabled={
             !tokenName ||
             tokenNameData?.token_name === tokenName ||
-            checkTokenName.tokenNameExist ||
-            checkTokenName.isLoading ||
+            values.tokenNameExist ||
+            values.isLoading ||
             isEditing ||
-            !!checkTokenName.error
+            !!values.error
           }
           onClick={toggleModal}
           variant="contained"
           color="success"
         >
-          {checkTokenName.isLoading || isEditing ? (
+          {values.isLoading || isEditing ? (
             <CircularProgress size={30} />
           ) : (
             'Save changes'

@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import ROUTES from '../../routes/routes';
 import { logoutCurrentUser } from '../../store/authSlice';
 import { useAppDispatch } from '../../store/store';
+import { LOCAL_STORAGE_TOKEN } from '../../variables/global';
 
 const Header = () => {
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
     dispatch(logoutCurrentUser());
-    localStorage.removeItem('token');
+    localStorage.removeItem(LOCAL_STORAGE_TOKEN);
   };
 
   return (

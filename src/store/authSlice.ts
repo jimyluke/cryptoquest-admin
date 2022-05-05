@@ -1,44 +1,66 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isAnyOf,
-  SerializedError,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
+
 import { cryptoQuestApi } from '../api/api';
+import { LOCAL_STORAGE_TOKEN } from '../variables/global';
 import { RootState } from './store';
 
 export const loginUserByPassword = createAsyncThunk<
   { userId: number; username: string; jwt: string },
-  { username: string; password: string }
->('auth/loginUserByPassword', async (user) => {
-  const response = await cryptoQuestApi.post('api/auth/signIn', user);
+  { username: string; password: string },
+  { rejectValue: { message: string } }
+>('auth/loginUserByPassword', async (user, { rejectWithValue }) => {
+  try {
+    const response = await cryptoQuestApi.post('api/auth/signIn', user);
 
-  localStorage.setItem('token', JSON.stringify(response.data.jwt));
+    localStorage.setItem(
+      LOCAL_STORAGE_TOKEN,
+      JSON.stringify(response?.data?.jwt)
+    );
 
-  return response.data;
+    return response?.data;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return rejectWithValue(error?.response?.data || error);
+  }
 });
 
-export const loginUserByToken = createAsyncThunk<{
-  userId: number;
-  username: string;
-  jwt: string;
-}>('auth/loginUserByToken', async () => {
-  const response = await cryptoQuestApi.get('api/auth/login', {
-    headers: {
-      'x-access-token': JSON.parse(localStorage.getItem('token') || '{}'),
-    },
-  });
+export const loginUserByToken = createAsyncThunk<
+  {
+    userId: number;
+    username: string;
+    jwt: string;
+  },
+  undefined,
+  { rejectValue: { message: string } }
+>('auth/loginUserByToken', async (_, { rejectWithValue }) => {
+  try {
+    const response = await cryptoQuestApi.get('api/auth/login', {
+      headers: {
+        'x-access-token': JSON.parse(
+          localStorage.getItem(LOCAL_STORAGE_TOKEN) || '{}'
+        ),
+      },
+    });
 
-  localStorage.setItem('token', JSON.stringify(response.data.jwt));
+    localStorage.setItem(
+      LOCAL_STORAGE_TOKEN,
+      JSON.stringify(response.data.jwt)
+    );
 
-  return response.data;
+    return response.data;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return rejectWithValue(error?.response?.data || error);
+  }
 });
 
 interface IAuthState {
   user: { userId: number; username: string } | null;
   isLoading: boolean;
   errors: {
-    signInError?: SerializedError;
+    signInError?: { message: string };
   };
 }
 
@@ -80,9 +102,9 @@ const auth = createSlice({
       )
       .addMatcher(
         isAnyOf(loginUserByPassword.rejected, loginUserByToken.rejected),
-        (state, { error }) => {
+        (state, { payload }) => {
           state.isLoading = false;
-          state.errors.signInError = error;
+          state.errors.signInError = payload;
         }
       );
   },

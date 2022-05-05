@@ -5,6 +5,7 @@ import Router from './routes/Router';
 
 import { useAppDispatch } from './store/store';
 import { loginUserByToken } from './store/authSlice';
+import { LOCAL_STORAGE_TOKEN } from './variables/global';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,7 +13,7 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (localStorage.getItem('token')) dispatch(loginUserByToken());
+    if (localStorage.getItem(LOCAL_STORAGE_TOKEN)) dispatch(loginUserByToken());
   }, [dispatch]);
 
   return (
