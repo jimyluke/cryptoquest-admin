@@ -179,25 +179,22 @@ const TokenNamesList = () => {
       </FormControl>
 
       {error && <Alert severity="error">{error.message}</Alert>}
-      {isLoading && !error && <Spinner flex />}
+      {isLoading && <Spinner flex />}
 
-      {!isLoading &&
-        !error &&
-        sortedTokenNames &&
-        sortedTokenNames.length === 0 && (
-          <div className="token-names__info">
-            <List style={{ fontSize: '100px' }} />
-            <Typography
-              style={{ textAlign: 'center' }}
-              variant="h4"
-              component="h4"
-            >
-              List is empty
-            </Typography>
-          </div>
-        )}
+      {!isLoading && sortedTokenNames && sortedTokenNames.length === 0 && (
+        <div className="token-names__info">
+          <List style={{ fontSize: '100px' }} />
+          <Typography
+            style={{ textAlign: 'center' }}
+            variant="h4"
+            component="h4"
+          >
+            List is empty
+          </Typography>
+        </div>
+      )}
 
-      {!isLoading && !error && sortedTokenNames && sortedTokenNames.length > 0 && (
+      {!isLoading && sortedTokenNames && sortedTokenNames.length > 0 && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
