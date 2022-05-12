@@ -52,6 +52,7 @@ export const loginUserByToken = createAsyncThunk<
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    localStorage.removeItem(LOCAL_STORAGE_TOKEN);
     return rejectWithValue(error?.response?.data || error);
   }
 });

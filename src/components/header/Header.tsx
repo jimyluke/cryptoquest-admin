@@ -1,4 +1,5 @@
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import HomeIcon from '@mui/icons-material/Home';
 import { IconButton, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +24,7 @@ const Header = () => {
             <ul className="header-nav__list">
               <li className="header-nav__item">
                 <Link className="header-nav__link" to={ROUTES.TOKEN_NAMES_PAGE}>
-                  Home
+                  <HomeIcon style={{ color: 'white' }} fontSize="large" />
                 </Link>
               </li>
             </ul>

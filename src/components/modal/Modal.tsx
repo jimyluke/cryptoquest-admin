@@ -51,7 +51,9 @@ const ModalComponent = ({
         onRequestClose={onCloseCustom}
       >
         <button
-          className="modal__close-btn btn btn--xs zindex-2"
+          className={`modal__close-btn btn btn--xs zindex-2 ${
+            !isClosable ? 'modal__close-btn--hidden' : ''
+          }`}
           onClick={onCloseCustom}
         >
           <Close />

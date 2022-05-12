@@ -62,8 +62,8 @@ const TokenNamesItem = ({ tokenName }: ITokenNamesItemProps) => {
       <StyledTableCell align="center">
         <div className="token-names__explorers-cell">
           <a
-            href={`https://explorer.solana.com/address/${tokenAddress}?cluster=devnet`}
-            // href={`https://explorer.solana.com/address/${tokenAddress}${
+            href={`https://explorer.solana.com/address/${tokenName.token_address}?cluster=devnet`}
+            // href={`https://explorer.solana.com/address/${tokenName.token_address}${
             //   process.env.NODE_ENV === EnvironmentEnum.DEVELOPMENT
             //     ? '?cluster=devnet'
             //     : ''
@@ -79,8 +79,8 @@ const TokenNamesItem = ({ tokenName }: ITokenNamesItemProps) => {
             />
           </a>
           <a
-            href={`https://solscan.io/token/${tokenAddress}?cluster=devnet`}
-            // href={`https://solscan.io/token/${tokenAddress}${
+            href={`https://solscan.io/token/${tokenName.token_address}?cluster=devnet`}
+            // href={`https://solscan.io/token/${tokenName.token_address}${
             //   process.env.NODE_ENV === EnvironmentEnum.DEVELOPMENT
             //     ? '?cluster=devnet'
             //     : ''

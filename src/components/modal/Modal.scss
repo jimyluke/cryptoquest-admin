@@ -44,5 +44,9 @@
     &:focus {
       background-color: #ccc;
     }
+
+    &--hidden {
+      display: none;
+    }
   }
 }
