@@ -106,20 +106,41 @@ const TokenName = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     try {
-      const regex = /^[A-Za-z]+( [A-Za-z]?)?[A-Za-z]*$/;
+      const regex = /^[A-Za-z]+( [A-Za-z]+)*$/;
+
+      const target = e.target;
+      let value = target.value;
+
+      const cursor = target.selectionStart;
+
+      value = value.replace(/\s\s+/g, ' ');
+
+      if (value === ' ') {
+        value = '';
+      } else if (value[0] === ' ' && value.length > 1) {
+        value = value.trimStart();
+      }
 
       if (
-        regex.test(e.currentTarget.value) ||
-        e.currentTarget.value.length === 0
+        regex.test(value) ||
+        value.length === 0 ||
+        (value[value.length - 1] === ' ' &&
+          regex.test(value[value.length - 2]) &&
+          value.length > 1 &&
+          value.search(/\s\s+/g)) === -1
       ) {
         setValues((prev) => ({
           ...prev,
           error: null,
           isLoading: true,
         }));
-        setTokenName(e.target.value);
-        debouncedChangeHandler(e.target.value);
+        setTokenName(value);
+        debouncedChangeHandler(value);
       }
+
+      setTimeout(() => {
+        target.setSelectionRange(cursor, cursor);
+      }, 10);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
