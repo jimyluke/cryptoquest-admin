@@ -1,5 +1,6 @@
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import HomeIcon from '@mui/icons-material/Home';
+import BadgeIcon from '@mui/icons-material/Badge';
+import CachedIcon from '@mui/icons-material/Cached';
 import { IconButton, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +25,14 @@ const Header = () => {
             <ul className="header-nav__list">
               <li className="header-nav__item">
                 <Link className="header-nav__link" to={ROUTES.TOKEN_NAMES_PAGE}>
-                  <HomeIcon style={{ color: 'white' }} fontSize="large" />
+                  <BadgeIcon style={{ color: 'white' }} fontSize="large" />{' '}
+                  Token Names
+                </Link>
+              </li>
+              <li className="header-nav__item">
+                <Link className="header-nav__link" to={ROUTES.UPDATE_NFT_PAGE}>
+                  <CachedIcon style={{ color: 'white' }} fontSize="large" />{' '}
+                  Update NFT
                 </Link>
               </li>
             </ul>
