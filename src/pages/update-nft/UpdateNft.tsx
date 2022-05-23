@@ -3,6 +3,7 @@ import { Button, TextField } from '@mui/material';
 import ModalComponent from '../../components/modal/Modal';
 import { cryptoQuestApi } from '../../api/api';
 import { notify } from '../../utils/notify';
+import { LOCAL_STORAGE_TOKEN } from '../../variables/global';
 
 const UpdateNft = () => {
   const [tokenAddress, setTokenAddress] = useState('');
@@ -18,9 +19,19 @@ const UpdateNft = () => {
 
   const onConfirmHandler = async () => {
     notify('success', 'Updating nft in progress');
-    await cryptoQuestApi.post('/api/nfts/customizeFromAdminPanel', {
-      tokenAddress,
-    });
+    await cryptoQuestApi.post(
+      '/api/nfts/customizeFromAdminPanel',
+      {
+        tokenAddress,
+      },
+      {
+        headers: {
+          'x-access-token': JSON.parse(
+            localStorage.getItem(LOCAL_STORAGE_TOKEN) || '{}'
+          ),
+        },
+      }
+    );
   };
 
   return (
