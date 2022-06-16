@@ -94,7 +94,10 @@ const UpdateSolanaMetadata = () => {
       </Button>
       <ModalComponent onClose={toggleModal} isOpen={isModalOpen}>
         <div className="rerender-nft__modal-content">
-          <div className="rerender-nft__modal-content-text">{`Are you sure you want to upload this file to IPFS?`}</div>
+          <div className="rerender-nft__modal-content-text">{`Are you sure you want to update solana metadata for token "${tokenAddress.slice(
+            0,
+            8
+          )}..."?`}</div>
           <Button
             onClick={onConfirmHandler}
             variant="contained"
